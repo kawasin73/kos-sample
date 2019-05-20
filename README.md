@@ -1,6 +1,19 @@
 # kos-sample
 
-[30日でできる! OS自作入門](https://www.amazon.co.jp/gp/product/B00IR1HYI0) を参考にした OS
+[30日でできる! OS自作入門](https://www.amazon.co.jp/gp/product/B00IR1HYI0) を参考にした OS を作る
+
+コンパイル環境は macOS です。
+
+## Environments
+
+- macOS : 10.14.5 (mojave)
+- Macbook Pro 13 inch
+
+install QEMU by Homebrew
+
+```bash
+$ brew install qemu
+```
 
 ## LICENSE
 
