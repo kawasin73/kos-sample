@@ -15,6 +15,10 @@ install QEMU by Homebrew
 $ brew install qemu
 ```
 
+## 参考
+
+- https://github.com/tatsumack/30nichideosjisaku
+
 ## LICENSE
 
 MIT
