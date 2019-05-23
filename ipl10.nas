@@ -79,6 +79,7 @@ next:
 		MOV		[0x0ff0],CH			; IPLがどこまで読んだのかをメモ
 		JMP		0xc200
 
+
 error:
 		MOV		SI,msg
 putloop:
@@ -91,11 +92,13 @@ putloop:
 		INT		0x10				; ビデオBIOS呼び出し
 		JMP		putloop
 
-; メッセージ部分
+fin:
+		HLT
+		JMP		fin
 
 msg:
 		DB		0x0a, 0x0a				; 改行を2つ
-		DB		"hello, kawasin73 world"
+		DB		"load error"
 		DB		0x0a				; 改行
 		DB		0
 
