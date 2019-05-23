@@ -1,6 +1,10 @@
+/* 他のファイルで作った関数がありますとCコンパイラに教える*/
+
+void io_hlt(void);
+
 void HariMain(void)
 {
 fin:
-    /* ここにHLTを入れたいのだがC言語ではHLTが使えない*/
+    io_hlt();
     goto fin;
 }
