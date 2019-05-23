@@ -1,5 +1,10 @@
-haribote.img
-ipl10.bin
-ipl10.lst
+*.bin
+*.lst
+*.gas
+*.obj
+bootpack.nas
+bootpack.map
+bootpack.bim
+bootpack.hrb
 haribote.sys
-haribote.lst
+haribote.img
