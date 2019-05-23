@@ -74,11 +74,9 @@ next:
 		CMP		CH,CYLS
 		JB			readloop		; CH < CYLS だったらreadloopへ
 
-; 読み終わり
+; 読み終わり haribote.sys を実行
 
-fin:
-		HLT						; 何かあるまでCPUを停止させる
-		JMP		fin				; 無限ループ
+		JMP		0xc200
 
 error:
 		MOV		SI,msg
