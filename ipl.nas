@@ -22,7 +22,7 @@
 		DD		2880			; このドライブ大きさをもう一度書く
 		DB		0,0,0x29		; よくわからないけどこの値にしておくといいらしい
 		DD		0xffffffff		; たぶんボリュームシリアル番号
-		DB		"HELLO-OS   "	; ディスクの名前（11バイト）
+		DB		"KARIBOTEOS "	; ディスクの名前（11バイト）
 		DB		"FAT12   "		; フォーマットの名前（8バイト）
 		RESB	18				; とりあえず18バイトあけておく
 
@@ -33,8 +33,26 @@ entry:
 		MOV		SS,AX
 		MOV		SP,0x7c00
 		MOV		DS,AX
-		MOV		ES,AX
 
+; ディスクを読む
+		MOV		AX,0x0820
+		MOV		ES,AX
+		MOV		CH,0				; シリンダ0
+		MOV		DH,0				; ヘッド0
+		MOV		CL,2				; セクタ2
+
+		MOV		AH,0x02				; AH=0x02 : ディスク読み込み
+		MOV		AL,1				; 1セクタ読み出す
+		MOV		BX,0
+		MOV		DL,0x00				; Aドライブ
+		INT		0x13				; ディスクBIOS呼び出し
+		JC		error
+
+fin:
+		HLT						; 何かあるまでCPUを停止させる
+		JMP		fin				; 無限ループ
+
+error:
 		MOV		SI,msg
 putloop:
 		MOV		AL,[SI]
@@ -45,9 +63,6 @@ putloop:
 		MOV		BX,15				; カラーコード
 		INT		0x10				; ビデオBIOS呼び出し
 		JMP		putloop
-fin:
-		HLT						; 何かあるまでCPUを停止させる
-		JMP		fin				; 無限ループ
 
 ; メッセージ部分
 
