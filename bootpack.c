@@ -3,14 +3,14 @@
 
 void HariMain(void)
 {
-    struct BOOTINFO *binfo;
+    struct BOOTINFO *binfo = (struct BOOTINFO *) ADR_BOOTINFO;
     char s[40], mcursor[256];
     int mx, my;
 
+    init_gdtidt();
+    init_pic();
+
     init_palette();
-
-    binfo = (struct BOOTINFO *) ADR_BOOTINFO;
-
     init_screen(binfo->vram, binfo->scrnx, binfo->scrny);
     init_mouse_cursor8(mcursor, COL8_008484);
 
