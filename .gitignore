@@ -2,6 +2,9 @@
 *.lst
 *.gas
 *.obj
+*.nas
+!naskfunc.nas
+!asmhead.nas
 bootpack.nas
 bootpack.map
 bootpack.bim
