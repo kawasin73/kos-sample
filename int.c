@@ -22,3 +22,32 @@ void init_pic(void) {
 
     return;
 }
+
+/* PS/2 キーボードからの割り込み */
+void inthandler21(int *esp) {
+    struct BOOTINFO *binfo = (struct BOOTINFO *) ADR_BOOTINFO;
+    boxfill8(binfo->vram, binfo->scrnx, COL8_000000, 0, 0, 32*8-1, 15);
+    putfonts8_asc(binfo->vram, binfo->scrnx, 0, 0, COL8_FFFFFF, "INT 21 (IRQ-1) : PS/2 keyboard");
+    for (;;) {
+        io_hlt();
+    }
+}
+
+/* PS/2 マウスからの割り込み */
+void inthandler2c(int *esp) {
+    struct BOOTINFO *binfo = (struct BOOTINFO *) ADR_BOOTINFO;
+    boxfill8(binfo->vram, binfo->scrnx, COL8_000000, 0, 0, 32*8-1, 15);
+    putfonts8_asc(binfo->vram, binfo->scrnx, 0, 0, COL8_FFFFFF, "INT 2C (IRQ-12) : PS/2 mouse");
+    for (;;) {
+        io_hlt();
+    }
+}
+
+/* PIC0 からの不完全割り込み対策 */
+/* Athlon64X2 機などではチップセットの都合により PIC の初期化時にこの割り込みが一度だけ起こる */
+/* この割り込み処理関数はその割り込みに対して何もしないでやり過ごす */
+/* この割り込みは PIC 初期化時の電気的なノイズによって発生したものなので真面目に処理する必要がない */
+void inthandler27(int *esp) {
+    io_out8(PIC0_OCW2, 0x67); /* IRQ-07 受付完了を PIC に通知 */
+    return;
+}
