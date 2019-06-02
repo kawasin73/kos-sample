@@ -7,7 +7,7 @@ void HariMain(void)
 {
     struct BOOTINFO *binfo = (struct BOOTINFO *) ADR_BOOTINFO;
     char s[40], mcursor[256], keybuf[32];
-    int mx, my, i, j;
+    int mx, my, i;
 
     init_gdtidt();
     init_pic();
