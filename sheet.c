@@ -69,7 +69,7 @@ void sheet_refreshsub(struct SHTCTL *ctl, int vx0, int vy0, int vx1, int vy1) {
         if (bx0 < 0) { bx0 = 0; }
         if (by0 < 0) { by0 = 0; }
         if (bx1 > sht->bxsize) { bx1 = sht->bxsize; }
-        if (by1 > sht->bysize) { by1 = sht->bxsize; }
+        if (by1 > sht->bysize) { by1 = sht->bysize; }
 
         for (by = by0; by < by1; by++) {
             vy = sht->vy0 + by;
@@ -117,7 +117,7 @@ void sheet_updown(struct SHEET *sht, int height) {
             }
             ctl->top--; /* 表示中の下敷きが１つ減るので、一番上の高さが減る */
         }
-        sheet_refresh(sht, sht->vx0, sht->vy0, sht->vx0 + sht->bxsize, sht->vy0 + sht->bysize); /* 新しい下敷きの情報に沿って画面を描き直す */
+        sheet_refreshsub(ctl, sht->vx0, sht->vy0, sht->vx0 + sht->bxsize, sht->vy0 + sht->bysize); /* 新しい下敷きの情報に沿って画面を描き直す */
     } else if (old < height) { /* 以前よりも高くなる */
         if (old >= 0) {
             /* 間のものを押し下げる */
@@ -135,7 +135,7 @@ void sheet_updown(struct SHEET *sht, int height) {
             ctl->sheets[height] = sht;
             ctl->top++; /* 表示中の下敷きが１つ増えるので、一番上の高さが増える */
         }
-        sheet_refresh(sht, sht->vx0, sht->vy0, sht->vx0 + sht->bxsize, sht->vy0 + sht->bysize); /* 新しい下敷きの情報に沿って画面を描き直す */
+        sheet_refreshsub(ctl, sht->vx0, sht->vy0, sht->vx0 + sht->bxsize, sht->vy0 + sht->bysize); /* 新しい下敷きの情報に沿って画面を描き直す */
     }
     return;
 }
