@@ -47,7 +47,8 @@ void timer_init(struct TIMER *timer, struct FIFO32 *fifo, int data) {
 }
 
 void timer_settime(struct TIMER *timer, unsigned int timeout) {
-    int e, i, j;
+    int e;
+    struct TIMER *t, *s;
     timer->timeout = timeout + timerctl.count;
     timer->flags = TIMER_FLAGS_USING;
 
@@ -55,52 +56,75 @@ void timer_settime(struct TIMER *timer, unsigned int timeout) {
     e = io_load_eflags();
     io_cli();
 
-    /* どこに入れればいいのかを探す */
-    for (i = 0; i < timerctl.using; i++) {
-        if (timerctl.timers[i]->timeout >= timer->timeout) {
-            break;
+    timerctl.using++;
+    if (timerctl.using == 1) {
+        /* 動作中のタイマはこれ１つになる場合 */
+        timerctl.t0 = timer;
+        timer->next = 0;
+        timerctl.next = timer->timeout;
+        io_store_eflags(e);
+        return;
+    }
+
+    t = timerctl.t0;
+    if (timer->timeout <= t->timeout) {
+        /* 先頭に入れる場合 */
+        timerctl.t0 = timer;
+        timer->next = t;
+        timerctl.next = timer->timeout;
+        io_store_eflags(e);
+        return;
+    }
+
+    /* どこに入れればいいかを探す */
+    for (;;) {
+        s = t;
+        t = t->next;
+        if (t == 0) {
+            break; /* 一番後ろになった */
+        }
+        if (timer->timeout <= t->timeout) {
+            /* s と t の間に入れる場合 */
+            s->next = timer;
+            timer->next = t;
+            io_store_eflags(e);
+            return;
         }
     }
 
-    timerctl.using++;
-    /* 後ろにずらす */
-    for (j = timerctl.using; j > i; j--) {
-        timerctl.timers[j] = timerctl.timers[j-1];
-    }
-
-    /* あいた隙間に入れる */
-    timerctl.timers[i] = timer;
-    timerctl.next = timerctl.timers[0]->timeout;
-
-    /* 割り込み禁止を元に戻す */
+    /* 一番後ろに入れる場合 */
+    s->next = timer;
+    timer->next = 0;
     io_store_eflags(e);
     return;
 }
 
 void inthandler20(int *esp) {
     int i, j;
+    struct TIMER *timer;
     io_out8(PIC0_OCW2, 0x60); /* IRQ-00 受付官僚を PIC に通知 */
     timerctl.count++;
     if (timerctl.next > timerctl.count) {
         return; /* まだ次の時刻なっていないので */
     }
+
+    timer = timerctl.t0;
     for (i = 0; i < timerctl.using; i++) {
         /* timers のタイマは全て動作中のものなので確認しない */
-        if (timerctl.timers[i]->timeout > timerctl.count) {
+        if (timer->timeout > timerctl.count) {
             break;
         }
         /* タイムアウト */
-        timerctl.timers[i]->flags = TIMER_FLAGS_ALLOC;
-        fifo32_put(timerctl.timers[i]->fifo, timerctl.timers[i]->data);
+        timer->flags = TIMER_FLAGS_ALLOC;
+        fifo32_put(timer->fifo, timer->data);
+        timer = timer->next;
     }
 
     /* ちょうど i 個のタイマがタイムアウトした。残りをずらす */
     timerctl.using -= i;
-    for (j = 0; j < timerctl.using; j++) {
-        timerctl.timers[j] = timerctl.timers[i+j];
-    }
+    timerctl.t0 = timer;
     if (timerctl.using > 0) {
-        timerctl.next = timerctl.timers[0]->timeout;
+        timerctl.next = timerctl.t0->timeout;
     } else {
         timerctl.next = 0xffffffff;
     }
