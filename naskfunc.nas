@@ -19,6 +19,7 @@
 		GLOBAL	_asm_inthandler20, _asm_inthandler21
 		GLOBAL	_asm_inthandler27, _asm_inthandler2c
 		GLOBAL	_memtest_sub
+		GLOBAL	_taskswitch3
 		GLOBAL	_taskswitch4
 		EXTERN	_inthandler20, _inthandler21
 		EXTERN	_inthandler27, _inthandler2c
@@ -210,6 +211,10 @@ mts_fin:
 		POP		EBX
 		POP		ESI
 		POP		EDI
+		RET
+
+_taskswitch3:		; void taskswitch3(void);
+		JMP		3*8:0
 		RET
 
 _taskswitch4:		; void taskswitch4(void);
