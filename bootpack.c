@@ -29,13 +29,13 @@ void HariMain(void)
           0,   0,   0,   0,   0,   0,   0, '7', '8', '9', '-', '4', '5', '6', '+', '1',
         '2', '3', '0', '.'
     };
-    struct TASK *task_b;
+    struct TASK *task_a, *task_b;
 
     init_gdtidt();
     init_pic();
     io_sti(); /* IDT/PIC の初期化が終わったので CPU の割り込み禁止を解除 */
 
-    fifo32_init(&fifo, 128, fifobuf);
+    fifo32_init(&fifo, 128, fifobuf, 0);
     init_pit();
     init_keyboard(&fifo, 256);
     enable_mouse(&fifo, 512, &mdec);
@@ -87,7 +87,8 @@ void HariMain(void)
     sprintf(s, "memory %dMB free : %dKB", memtotal / (1024*1024), memman_total(memman) / 1024);
     putfonts8_asc_sht(sht_back, 0, 32, COL8_FFFFFF, COL8_008484, s, 40);
 
-    task_init(memman);
+    task_a = task_init(memman);
+    fifo.task = task_a;
     task_b = task_alloc();
     task_b->tss.esp = memman_alloc_4k(memman, 64*1024) + 64 * 1024 - 8;
     task_b->tss.eip = (int) &task_b_main;
@@ -103,7 +104,8 @@ void HariMain(void)
     for (;;) {
         io_cli();
         if (fifo32_status(&fifo) == 0) {
-            io_stihlt();
+            task_sleep(task_a);
+            io_sti();
         } else {
             i = fifo32_get(&fifo);
             io_sti();
@@ -262,7 +264,7 @@ void task_b_main(struct SHEET *sht_back) {
     int i, fifobuf[128], count = 0;
     char s[12];
 
-    fifo32_init(&fifo, 128, fifobuf);
+    fifo32_init(&fifo, 128, fifobuf, 0);
     timer_put = timer_alloc();
     timer_init(timer_put, &fifo, 1);
     timer_settime(timer_put, 1);
@@ -270,10 +272,10 @@ void task_b_main(struct SHEET *sht_back) {
     for (;;) {
         count++;
 
-        io_cli();
         if (fifo32_status(&fifo) == 0) {
-            io_stihlt();
+            // io_stihlt();
         } else {
+            io_cli();
             i = fifo32_get(&fifo);
             io_sti();
             if (i == 1) {
