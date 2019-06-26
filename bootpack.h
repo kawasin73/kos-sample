@@ -1,10 +1,14 @@
 /* asmhead.nas */
-struct BOOTINFO {
-    char cyls, leds, vmode, reserve;
-    short scrnx, scrny;
+struct BOOTINFO { /* 0x0ff0 - 0x0fff */
+    char cyls; /* ブートセクタはどこまでディスクを読み込んだのか */
+    char leds; /* ブート時のキーボードの LED の状態 */
+    char vmode; /* ビデオモード 何ビットカラーか */
+    char reserve;
+    short scrnx, scrny; /* 画面解像度 */
     char *vram;
 };
 #define ADR_BOOTINFO    0x00000ff0
+#define ADR_DISKIMG     0x00100000
 
 /* naskfunc.nas */
 void io_hlt(void);
