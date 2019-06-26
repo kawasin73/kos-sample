@@ -42,7 +42,7 @@ void HariMain(void)
     struct SHEET *sht_back, *sht_mouse, *sht_win, *sht_cons;
     struct TASK *task_a, *task_cons;
     struct TIMER *timer;
-    int key_to = 0, key_shift = 0;
+    int key_to = 0, key_shift = 0, key_leds = (binfo->leds >> 4) & 7;
 
     init_gdtidt();
     init_pic();
@@ -143,6 +143,14 @@ void HariMain(void)
                     }
                 } else {
                     s[0] = 0;
+                }
+                if ('A' <= s[0] && s[0] <= 'Z') { /* 入力文字がアルファベット */
+                    if (
+                        ((key_leds & 4) == 0 && key_shift == 0) ||
+                        ((key_leds & 4) != 0 && key_shift != 0)
+                        ) {
+                            s[0] += 0x20;
+                        }
                 }
                 if (s[0] != 0) { /* 通常文字 */
                     if (key_to == 0) { /* タスク A */
