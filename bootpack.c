@@ -497,7 +497,7 @@ void console_task(struct SHEET *sheet, int memtotal) {
                             }
                         }
                         cursor_y = cons_newline(cursor_y, sheet);
-                    } else if (cmdline[0] == 't' && cmdline[1] == 'y' && cmdline[2] == 'p' && cmdline[3] == 'e' && cmdline[4] == ' ') {
+                    } else if (strncmp(cmdline, "type ", 5) == 0) {
                         /* type コマンド */
                         /* ファイル名を準備する */
                         for (y = 0; y < 11; y++) {
@@ -542,11 +542,30 @@ void console_task(struct SHEET *sheet, int memtotal) {
                                 /* 1文字ずつ出力 */
                                 s[0] = p[x];
                                 s[1] = 0;
-                                putfonts8_asc_sht(sheet, cursor_x, cursor_y, COL8_FFFFFF, COL8_000000, s, 1);
-                                cursor_x += 8;
-                                if (cursor_x == 8 + 240) { /* 右端まできたので改行 */
+                                if (s[0] == 0x09) { /* Tab */
+                                    for (;;) {
+                                        putfonts8_asc_sht(sheet, cursor_x, cursor_y, COL8_FFFFFF, COL8_000000, " ", 1);
+                                        cursor_x += 8;
+                                        if (cursor_x == 8 + 240) {
+                                            cursor_x = 8;
+                                            cursor_y = cons_newline(cursor_y, sheet);
+                                        }
+                                        if (((cursor_x-8) & 0x1f) == 0) {
+                                            break; /* 4 で割り切れたら break */
+                                        }
+                                    }
+                                } else if (s[0] == 0x0a) { /* 改行 */
                                     cursor_x = 8;
                                     cursor_y = cons_newline(cursor_y, sheet);
+                                } else if (s[0] == 0x0d) { /* 復帰 */
+                                    /* とりあえず何もしない */
+                                } else { /* 普通の文字 */
+                                    putfonts8_asc_sht(sheet, cursor_x, cursor_y, COL8_FFFFFF, COL8_000000, s, 1);
+                                    cursor_x += 8;
+                                    if (cursor_x == 8 + 240) { /* 右端まできたので改行 */
+                                        cursor_x = 8;
+                                        cursor_y = cons_newline(cursor_y, sheet);
+                                    }
                                 }
                             }
                         } else {
