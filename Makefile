@@ -45,15 +45,19 @@ bootpack.bim: $(OBJS_BOOTPACK) Makefile
 bootpack.hrb: bootpack.bim Makefile
 	$(BIM2HRB) bootpack.bim bootpack.hrb 0
 
+hlt.hrb: hlt.nas Makefile
+	$(NASK) hlt.nas hlt.hrb hlt.lst
+
 haribote.sys: asmhead.bin bootpack.hrb Makefile
 	cat asmhead.bin bootpack.hrb > haribote.sys
 
-haribote.img: ipl10.bin haribote.sys Makefile
+haribote.img: ipl10.bin haribote.sys hlt.hrb Makefile
 	$(EDIMG) imgin:./z_tools/fdimg0at.tek \
 		wbinimg src:ipl10.bin len:512 from:0 to:0 \
 		copy from:haribote.sys to:@: \
 		copy from:ipl10.nas to:@: \
-		copy from:asmhead.bin to:@: \
+		copy from:int.c to:@: \
+		copy from:hlt.hrb to:@: \
 		imgout:haribote.img
 
 
