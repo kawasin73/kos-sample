@@ -32,7 +32,7 @@ void file_loadfile(int clustno, int size, char *buf, int *fat, char *img) {
     return;
 }
 
-struct FIILEINFO *file_search(char *name, struct FIILEINFO *finfo, int max) {
+struct FILEINFO *file_search(char *name, struct FILEINFO *finfo, int max) {
     int i, j;
     char s[12];
     /* ファイル名を準備する */

@@ -190,7 +190,7 @@ void cmd_cls(struct CONSOLE* cons) {
 }
 
 void cmd_dir(struct CONSOLE* cons) {
-    struct FIILEINFO *finfo = (struct FIILEINFO *) (ADR_DISKIMG + 0x002600);
+    struct FILEINFO *finfo = (struct FILEINFO *) (ADR_DISKIMG + 0x002600);
     int i, j;
     char s[30];
     for (i = 0; i < 224; i++) {
@@ -217,7 +217,7 @@ void cmd_dir(struct CONSOLE* cons) {
 
 void cmd_type(struct CONSOLE* cons, int *fat, char *cmdline) {
     struct MEMMAN *memman = (struct MEMMAN *) MEMMAN_ADDR;
-    struct FIILEINFO *finfo = file_search(cmdline+5, (struct FIILEINFO *) (ADR_DISKIMG + 0x002600), 224);
+    struct FILEINFO *finfo = file_search(cmdline+5, (struct FILEINFO *) (ADR_DISKIMG + 0x002600), 224);
     char *p;
     int i;
     if (finfo != 0) {
@@ -239,7 +239,7 @@ void cmd_type(struct CONSOLE* cons, int *fat, char *cmdline) {
 
 void cmd_hlt(struct CONSOLE* cons, int *fat) {
     struct MEMMAN *memman = (struct MEMMAN *) MEMMAN_ADDR;
-    struct FIILEINFO *finfo = file_search("HLT.HRB", (struct FIILEINFO *) (ADR_DISKIMG + 0x002600), 224);
+    struct FILEINFO *finfo = file_search("HLT.HRB", (struct FILEINFO *) (ADR_DISKIMG + 0x002600), 224);
     struct SEGMENT_DESCRIPTOR *gdt = (struct SEGMENT_DESCRIPTOR *) ADR_GDT;
     char *p;
     if (finfo != 0) {

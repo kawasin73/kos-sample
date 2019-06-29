@@ -277,7 +277,7 @@ void cmd_type(struct CONSOLE* cons, int *fat, char *cmdline);
 void cmd_hlt(struct CONSOLE* cons, int *fat);
 
 /* file.c */
-struct FIILEINFO {
+struct FILEINFO {
     unsigned char name[8], ext[3], type;
     char reserve[10];
     unsigned short time, data, clustno;
@@ -286,4 +286,4 @@ struct FIILEINFO {
 
 void file_readfat(int *fat, unsigned char *img);
 void file_loadfile(int clustno, int size, char *buf, int *fat, char *img);
-struct FIILEINFO *file_search(char *name, struct FIILEINFO *finfo, int max);
+struct FILEINFO *file_search(char *name, struct FILEINFO *finfo, int max);
