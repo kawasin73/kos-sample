@@ -31,3 +31,44 @@ void file_loadfile(int clustno, int size, char *buf, int *fat, char *img) {
     }
     return;
 }
+
+struct FIILEINFO *file_search(char *name, struct FIILEINFO *finfo, int max) {
+    int i, j;
+    char s[12];
+    /* ファイル名を準備する */
+    for (j = 0; j < 11; j++) {
+        s[j] = ' ';
+    }
+    j = 0;
+    for (i = 0; j < 11 && name[i] != 0; i++) {
+        if (name[i] == '.') {
+            j = 8;
+        } else {
+            s[j] = name[i];
+            if ('a' <= s[j] && s[j] <= 'z') {
+                /* 小文字は大文字に戻す */
+                s[j] -= 0x20;
+            }
+            j++;
+        }
+    }
+
+    /* ファイルを探す */
+    for (i = 0; i < max; ) {
+        if (finfo[i].name[0] == 0x00) {
+            break;
+        }
+        if ((finfo[i].type & 0x18) == 0) {
+            for (j = 0; j < 11; j++) {
+                if (finfo[i].name[j] != s[j]) {
+                    goto next;
+                }
+            }
+            /* ファイルが見つかった */
+            return finfo + i;
+        }
+    next:
+        i++;
+    }
+    return 0;
+}
