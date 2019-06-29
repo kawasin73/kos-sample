@@ -20,10 +20,10 @@
 		GLOBAL	_asm_inthandler27, _asm_inthandler2c
 		GLOBAL	_memtest_sub
 		GLOBAL	_farjmp, _farcall
-		GLOBAL	_asm_cons_putchar
+		GLOBAL	_asm_hrb_api
 		EXTERN	_inthandler20, _inthandler21
 		EXTERN	_inthandler27, _inthandler2c
-		EXTERN	_cons_putchar
+		EXTERN	_hrb_api
 
 ; 以下は実際の関数
 
@@ -222,14 +222,11 @@ _farcall:		; void farcall(int eip, int cs);
 		CALL	FAR [ESP+4]
 		RET
 
-_asm_cons_putchar:
+_asm_hrb_api:
 		STI
-		PUSHAD
-		PUSH	1
-		AND		EAX,0xff				; AH や EAX の上位を 0 にして、EAX に文字コードが入った状態にする
-		PUSH	EAX
-		PUSH	DWORD [0x0fec]			; メモリの内容おw読み込んでその値を PUSH する
-		CALL	_cons_putchar
-		ADD		ESP,12					; スタックに積んだデータを捨てる
+		PUSHAD							; 保存のためのPUSH
+		PUSHAD							; hrb_api に渡すための PUSH
+		CALL	_hrb_api
+		ADD		ESP,32					; スタックに積んだデータを捨てる
 		POPAD
 		IRETD
