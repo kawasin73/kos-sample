@@ -114,6 +114,8 @@ clean:
 	-$(DEL) *.hrb
 	-$(DEL) *.bim
 	-$(DEL) *.map
+	-$(DEL) dsctbl.nas
+	-$(DEL) graphic.nas
 	-$(DEL) bootpack.nas
 	-$(DEL) haribote.sys
 
