@@ -63,10 +63,16 @@ hello3.bim: hello3.obj a_nask.obj Makefile
 hello3.hrb: hello3.bim Makefile
 	$(BIM2HRB) hello3.bim hello3.hrb 0
 
+clack1.bim: clack1.obj Makefile
+	$(OBJ2BIM) @$(RULEFILE) out:clack1.bim map:clack1.map clack1.obj
+
+clack1.hrb: clack1.bim Makefile
+	$(BIM2HRB) clack1.bim clack1.hrb 0
+
 haribote.sys: asmhead.bin bootpack.hrb Makefile
 	cat asmhead.bin bootpack.hrb > haribote.sys
 
-haribote.img: ipl10.bin haribote.sys hello.hrb hello2.hrb a.hrb hello3.hrb Makefile
+haribote.img: ipl10.bin haribote.sys hello.hrb hello2.hrb a.hrb hello3.hrb clack1.hrb Makefile
 	$(EDIMG) imgin:./z_tools/fdimg0at.tek \
 		wbinimg src:ipl10.bin len:512 from:0 to:0 \
 		copy from:haribote.sys to:@: \
@@ -76,6 +82,7 @@ haribote.img: ipl10.bin haribote.sys hello.hrb hello2.hrb a.hrb hello3.hrb Makef
 		copy from:hello2.hrb to:@: \
 		copy from:a.hrb to:@: \
 		copy from:hello3.hrb to:@: \
+		copy from:clack1.hrb to:@: \
 		imgout:haribote.img
 
 
