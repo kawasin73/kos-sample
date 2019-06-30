@@ -63,16 +63,19 @@ hello3.bim: hello3.obj a_nask.obj Makefile
 hello3.hrb: hello3.bim Makefile
 	$(BIM2HRB) hello3.bim hello3.hrb 0
 
-clack1.bim: clack1.obj Makefile
-	$(OBJ2BIM) @$(RULEFILE) out:clack1.bim map:clack1.map clack1.obj
+crack1.bim: crack1.obj Makefile
+	$(OBJ2BIM) @$(RULEFILE) out:crack1.bim map:crack1.map crack1.obj
 
-clack1.hrb: clack1.bim Makefile
-	$(BIM2HRB) clack1.bim clack1.hrb 0
+crack1.hrb: crack1.bim Makefile
+	$(BIM2HRB) crack1.bim crack1.hrb 0
+
+crack2.hrb: crack2.nas Makefile
+	$(NASK) crack2.nas crack2.hrb crack2.lst
 
 haribote.sys: asmhead.bin bootpack.hrb Makefile
 	cat asmhead.bin bootpack.hrb > haribote.sys
 
-haribote.img: ipl10.bin haribote.sys hello.hrb hello2.hrb a.hrb hello3.hrb clack1.hrb Makefile
+haribote.img: ipl10.bin haribote.sys hello.hrb hello2.hrb a.hrb hello3.hrb crack1.hrb crack2.hrb Makefile
 	$(EDIMG) imgin:./z_tools/fdimg0at.tek \
 		wbinimg src:ipl10.bin len:512 from:0 to:0 \
 		copy from:haribote.sys to:@: \
@@ -82,7 +85,8 @@ haribote.img: ipl10.bin haribote.sys hello.hrb hello2.hrb a.hrb hello3.hrb clack
 		copy from:hello2.hrb to:@: \
 		copy from:a.hrb to:@: \
 		copy from:hello3.hrb to:@: \
-		copy from:clack1.hrb to:@: \
+		copy from:crack1.hrb to:@: \
+		copy from:crack2.hrb to:@: \
 		imgout:haribote.img
 
 
