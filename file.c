@@ -23,7 +23,7 @@ void file_loadfile(int clustno, int size, char *buf, int *fat, char *img) {
             break;
         }
         for (i = 0; i < 512; i++) {
-            buf[i] = img[clustno * 512 + 1];
+            buf[i] = img[clustno * 512 + i];
         }
         size -= 512;
         buf += 512;
