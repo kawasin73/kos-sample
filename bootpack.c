@@ -40,6 +40,7 @@ void HariMain(void)
     struct TASK *task_a, *task_cons;
     struct TIMER *timer;
     int key_to = 0, key_shift = 0, key_leds = (binfo->leds >> 4) & 7, keycmd_wait = -1;
+    struct CONSOLE *cons;
 
     init_gdtidt();
     init_pic();
@@ -233,6 +234,14 @@ void HariMain(void)
                     key_leds ^= 1;
                     fifo32_put(&keycmd, KEYCMD_LED);
                     fifo32_put(&keycmd, key_leds);
+                }
+                if (i == 256 + 0x3b && key_shift != 0 && task_cons->tss.ss0 != 0) { /* Shift + F1 */
+                    cons = (struct CONSOLE *) *((int *) 0x0fec);
+                    cons_putstr0(cons, "\nBreak(key) :\n");
+                    io_cli();
+                    task_cons->tss.eax = (int) &(task_cons->tss.esp0);
+                    task_cons->tss.eip = (int) &asm_end_app;
+                    io_sti();
                 }
                 if (i == 256 + 0xfa) { /* キーボードがデータを無事受け取った */
                     keycmd_wait = -1;
