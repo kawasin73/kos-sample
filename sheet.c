@@ -134,9 +134,9 @@ void sheet_updown(struct SHEET *sht, int height) {
 
     /* 指定が低すぎや高すぎだったら修正する */
     if (height > ctl->top + 1) {
-        height = ctl -> top + 1;
+        height = ctl->top + 1;
     }
-    if (height == -1) {
+    if (height < -1) {
         height = -1;
     }
     sht->height = height; /* 高さを設定 */
@@ -175,8 +175,8 @@ void sheet_updown(struct SHEET *sht, int height) {
         } else { /* 非表示状態から表示状態へ */
             /* 上になるものを持ち上げる */
             for (h = ctl->top; h >= height; h--) {
-                ctl->sheets[h] = ctl->sheets[h-1];
-                ctl->sheets[h]->height = h + 1;
+                ctl->sheets[h+1] = ctl->sheets[h];
+                ctl->sheets[h+1]->height = h + 1;
             }
             ctl->sheets[height] = sht;
             ctl->top++; /* 表示中の下敷きが１つ増えるので、一番上の高さが増える */
