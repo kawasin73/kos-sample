@@ -111,11 +111,17 @@ star2.bim: star2.obj a_nask.obj Makefile
 star2.hrb: star2.bim Makefile
 	$(BIM2HRB) star2.bim star2.hrb 47k
 
+lines.bim: lines.obj a_nask.obj Makefile
+	$(OBJ2BIM) @$(RULEFILE) out:lines.bim stack:1k map:lines.map lines.obj a_nask.obj
+
+lines.hrb: lines.bim Makefile
+	$(BIM2HRB) lines.bim lines.hrb 47k
+
 haribote.sys: asmhead.bin bootpack.hrb Makefile
 	cat asmhead.bin bootpack.hrb > haribote.sys
 
 haribote.img: ipl10.bin haribote.sys hello.hrb hello2.hrb a.hrb hello3.hrb hello4.hrb hello5.hrb \
-		winhelo.hrb winhelo2.hrb winhelo3.hrb star1.hrb stars.hrb star2.hrb Makefile
+		winhelo.hrb winhelo2.hrb winhelo3.hrb star1.hrb stars.hrb star2.hrb lines.hrb Makefile
 	$(EDIMG) imgin:./z_tools/fdimg0at.tek \
 		wbinimg src:ipl10.bin len:512 from:0 to:0 \
 		copy from:haribote.sys to:@: \
@@ -133,6 +139,7 @@ haribote.img: ipl10.bin haribote.sys hello.hrb hello2.hrb a.hrb hello3.hrb hello
 		copy from:star1.hrb to:@: \
 		copy from:stars.hrb to:@: \
 		copy from:star2.hrb to:@: \
+		copy from:lines.hrb to:@: \
 		imgout:haribote.img
 
 # 一般規則
