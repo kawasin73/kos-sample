@@ -34,6 +34,7 @@ struct TIMER *timer_alloc(void) {
     for (i = 0; i < MAX_TIMER; i++) {
         if (timerctl.timers0[i].flags == 0) {
             timerctl.timers0[i].flags = TIMER_FLAGS_ALLOC;
+            timerctl.timers0[i].flags2 = 0;
             return &timerctl.timers0[i];
         }
     }
@@ -117,5 +118,52 @@ void inthandler20(int *esp) {
     if (ts != 0) {
         task_switch();
     }
+    return;
+}
+
+int timer_cancel(struct TIMER *timer) {
+    int e;
+    struct TIMER *t;
+    e = io_load_eflags();
+    io_cli(); /* 設定中にタイマの状態が変化しないようにする */
+    if (timer->flags == TIMER_FLAGS_USING) { /* 取り消し処理は必要か？ */
+        if (timer == timerctl.t0) {
+            /* 先頭だった場合の取り消し処理 */
+            t = timer->next;
+            timerctl.t0 = t;
+            timerctl.next = t->timeout;
+        } else {
+            /* 先頭以外の場合の取り消し処理 */
+            /* timer の 1 つ前を探す */
+            t = timerctl.t0;
+            for (;;) {
+                if (t->next == timer) {
+                    break;
+                }
+                t = t->next;
+            }
+            t->next = timer->next;
+        }
+        timer->flags = TIMER_FLAGS_ALLOC;
+        io_store_eflags(e);
+        return 1; /* キャンセル処理成功 */
+    }
+    io_store_eflags(e);
+    return 0; /* キャンセル処理は不要だった */
+}
+
+void timer_cancelall(struct FIFO32 *fifo) {
+    int e, i;
+    struct TIMER *t;
+    e = io_load_eflags();
+    io_cli(); /* 設定中にタイマの状態が変化しないようにする */
+    for (i = 0; i < MAX_TIMER; i++) {
+        t = &timerctl.timers0[i];
+        if (t->flags != 0 && t->flags2 != 0 && t->fifo == fifo) {
+            timer_cancel(t);
+            timer_free(t);
+        }
+    }
+    io_store_eflags(e);
     return;
 }
