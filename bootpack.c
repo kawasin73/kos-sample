@@ -206,6 +206,7 @@ void HariMain(void)
                         task->tss.eax = (int) &(task->tss.esp0);
                         task->tss.eip = (int) &asm_end_app;
                         io_sti();
+                        task_run(task, -1, 0); /* 終了処理をやらせるために寝ていたら起こす */
                     }
                 }
                 if (i == 256 + 0x3c && key_shift != 0) { /* Shift + F2 */
@@ -295,6 +296,7 @@ void HariMain(void)
                                                 task->tss.eax = (int) &(task->tss.esp0);
                                                 task->tss.eip = (int) &asm_end_app;
                                                 io_sti();
+                                                task_run(task, -1, 0); /* 終了処理をやらせるために寝ていたら起こす */
                                             } else { /* コンソール */
                                                 task = sht->task;
                                                 io_cli();
