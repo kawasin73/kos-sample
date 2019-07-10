@@ -147,12 +147,18 @@ color2.bim: color2.obj a_nask.obj Makefile
 color2.hrb: color2.bim Makefile
 	$(BIM2HRB) color2.bim color2.hrb 56k
 
+crack7.bim: crack7.obj Makefile
+	$(OBJ2BIM) @$(RULEFILE) out:crack7.bim stack:1k map:crack7.map crack7.obj
+
+crack7.hrb: crack7.bim Makefile
+	$(BIM2HRB) crack7.bim crack7.hrb 0k
+
 haribote.sys: asmhead.bin bootpack.hrb Makefile
 	cat asmhead.bin bootpack.hrb > haribote.sys
 
 haribote.img: ipl10.bin haribote.sys hello.hrb hello2.hrb a.hrb hello3.hrb hello4.hrb hello5.hrb \
 		winhelo.hrb winhelo2.hrb winhelo3.hrb star1.hrb stars.hrb star2.hrb lines.hrb \
-		walk.hrb noodle.hrb beepdown.hrb color.hrb color2.hrb Makefile
+		walk.hrb noodle.hrb beepdown.hrb color.hrb color2.hrb crack7.hrb Makefile
 	$(EDIMG) imgin:./z_tools/fdimg0at.tek \
 		wbinimg src:ipl10.bin len:512 from:0 to:0 \
 		copy from:haribote.sys to:@: \
@@ -176,6 +182,7 @@ haribote.img: ipl10.bin haribote.sys hello.hrb hello2.hrb a.hrb hello3.hrb hello
 		copy from:beepdown.hrb to:@: \
 		copy from:color.hrb to:@: \
 		copy from:color2.hrb to:@: \
+		copy from:crack7.hrb to:@: \
 		imgout:haribote.img
 
 # 一般規則
