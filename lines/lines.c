@@ -1,8 +1,8 @@
-#include "apilib.h"
+#include "../apilib.h"
 
 void HariMain(void) {
     char *buf;
-    int win, i, x, y;
+    int win, i;
     api_initmalloc();
     buf = api_malloc(160*100);
     win = api_openwin(buf, 160, 100, -1, "lines");
