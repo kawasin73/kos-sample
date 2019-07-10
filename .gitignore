@@ -10,9 +10,6 @@
 !asmhead.nas
 haribote.sys
 haribote.img
-!hlt.nas
-!hello.nas
-!hello2.nas
+apilib.lib
 !hello5.nas
-!crack7.nas
 !api*.nas
