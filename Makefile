@@ -12,18 +12,18 @@ default:
 
 # ファイル生成規則
 
-haribote.img: haribote/ipl10.bin haribote/haribote.sys Makefile \
+haribote.img: haribote/ipl20.bin haribote/haribote.sys Makefile \
 		a/a.hrb hello3/hello3.hrb hello4/hello4.hrb hello5/hello5.hrb \
 		winhelo/winhelo.hrb winhelo2/winhelo2.hrb winhelo3/winhelo3.hrb \
 		star1/star1.hrb stars/stars.hrb star2/star2.hrb \
 		lines/lines.hrb walk/walk.hrb noodle/noodle.hrb \
 		beepdown/beepdown.hrb color/color.hrb color2/color2.hrb \
 		sosu/sosu.hrb sosu2/sosu2.hrb sosu3/sosu3.hrb \
-		typeipl/typeipl.hrb type/type.hrb iroha/iroha.hrb
+		typeipl/typeipl.hrb type/type.hrb iroha/iroha.hrb chklang/chklang.hrb
 	$(EDIMG) imgin:./z_tools/fdimg0at.tek \
-		wbinimg src:haribote/ipl10.bin len:512 from:0 to:0 \
+		wbinimg src:haribote/ipl20.bin len:512 from:0 to:0 \
 		copy from:haribote/haribote.sys to:@: \
-		copy from:haribote/ipl10.nas to:@: \
+		copy from:haribote/ipl20.nas to:@: \
 		copy from:a/a.hrb to:@: \
 		copy from:hello3/hello3.hrb to:@: \
 		copy from:hello4/hello4.hrb to:@: \
@@ -46,7 +46,9 @@ haribote.img: haribote/ipl10.bin haribote/haribote.sys Makefile \
 		copy from:typeipl/typeipl.hrb to:@: \
 		copy from:type/type.hrb to:@: \
 		copy from:iroha/iroha.hrb to:@: \
+		copy from:chklang/chklang.hrb to:@: \
 		copy from:shiftjis.txt to:@: \
+		copy from:euc.txt to:@: \
 		copy from:nihongo/nihongo.fnt to:@: \
 		imgout:haribote.img
 
@@ -82,6 +84,7 @@ full:
 	$(MAKE) -C typeipl
 	$(MAKE) -C type
 	$(MAKE) -C iroha
+	$(MAKE) -C chklang
 	$(MAKE) haribote.img
 
 run_full:
@@ -124,6 +127,7 @@ clean_full:
 	$(MAKE) -C typeipl	clean
 	$(MAKE) -C type		clean
 	$(MAKE) -C iroha	clean
+	$(MAKE) -C chklang	clean
 
 src_only_full:
 	$(MAKE) -C haribote	src_only
@@ -150,6 +154,7 @@ src_only_full:
 	$(MAKE) -C typeipl	src_only
 	$(MAKE) -C type		src_only
 	$(MAKE) -C iroha	src_only
+	$(MAKE) -C chklang	src_only
 	-$(DEL) haribote.img
 
 refresh:

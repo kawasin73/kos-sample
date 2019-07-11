@@ -8,7 +8,7 @@
 *.map
 !naskfunc.nas
 !asmhead.nas
-!ipl10.nas
+!ipl20.nas
 haribote.sys
 haribote.img
 apilib.lib
