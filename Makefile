@@ -46,6 +46,7 @@ haribote.img: haribote/ipl10.bin haribote/haribote.sys Makefile \
 		copy from:typeipl/typeipl.hrb to:@: \
 		copy from:type/type.hrb to:@: \
 		copy from:iroha/iroha.hrb to:@: \
+		copy from:shiftjis.txt to:@: \
 		copy from:nihongo/nihongo.fnt to:@: \
 		imgout:haribote.img
 
