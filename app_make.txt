@@ -12,9 +12,11 @@ OBJ2BIM  = $(TOOLPATH)obj2bim
 MAKEFONT = $(TOOLPATH)makefont
 BIN2OBJ  = $(TOOLPATH)bin2obj
 BIM2HRB  = $(TOOLPATH)bim2hrb
+BIM2BIN  = $(TOOLPATH)bim2bin
 RULEFILE = ./$(TOOLPATH)haribote/haribote.rul
 EDIMG    = $(TOOLPATH)edimg
 GOLIB    = $(TOOLPATH)golib00
+COPY     = cp
 DEL      = rm -f
 
 # デフォルト動作
@@ -27,9 +29,6 @@ default:
 $(APP).bim: $(APP).obj $(APILIBPATH)apilib.lib Makefile ../app_make.txt
 	$(OBJ2BIM) @$(RULEFILE) out:$(APP).bim map:$(APP).map stack:$(STACK) \
 	$(APP).obj $(APILIBPATH)apilib.lib
-
-$(APP).hrb: $(APP).bim Makefile ../app_make.txt
-	$(BIM2HRB) $(APP).bim $(APP).hrb $(MALLOC)
 
 haribote.img: $(HARIBOTEPATH)ipl10.bin $(HARIBOTEPATH)haribote.sys $(APP).hrb \
 				$(NIHONGOPATH)nihongo.fnt Makefile ../app_make.txt
@@ -50,6 +49,12 @@ haribote.img: $(HARIBOTEPATH)ipl10.bin $(HARIBOTEPATH)haribote.sys $(APP).hrb \
 
 %.obj: %.nas Makefile
 	$(NASK) $*.nas $*.obj $*.lst
+
+%.org: %.bim Makefile ../app_make.txt
+	$(BIM2HRB) $*.bim $*.org $(MALLOC)
+
+%.hrb: %.org Makefile ../app_make.txt
+	$(BIM2BIN) -osacmp in:$*.org out:$*.hrb
 
 # コマンド
 
@@ -72,6 +77,7 @@ clean:
 	-$(DEL) *.obj
 	-$(DEL) *.map
 	-$(DEL) *.bim
+	-$(DEL) *.org
 	-$(DEL) haribote.img
 
 src_only:

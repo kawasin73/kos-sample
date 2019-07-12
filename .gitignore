@@ -6,9 +6,11 @@
 *.hrb
 *.bim
 *.map
+*.org
 !naskfunc.nas
 !asmhead.nas
 !ipl20.nas
+!nihongo.org
 haribote.sys
 haribote.img
 apilib.lib
