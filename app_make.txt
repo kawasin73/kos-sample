@@ -2,6 +2,7 @@ TOOLPATH		= ../z_tools/
 INCPATH			= ../z_tools/haribote/
 APILIBPATH		= ../apilib/
 HARIBOTEPATH	= ../haribote/
+NIHONGOPATH		= ../nihongo/
 
 MAKE     = make -r
 NASK     = $(TOOLPATH)nask
@@ -31,12 +32,12 @@ $(APP).hrb: $(APP).bim Makefile ../app_make.txt
 	$(BIM2HRB) $(APP).bim $(APP).hrb $(MALLOC)
 
 haribote.img: $(HARIBOTEPATH)ipl10.bin $(HARIBOTEPATH)haribote.sys $(APP).hrb \
-				Makefile ../app_make.txt
+				$(NIHONGOPATH)nihongo.fnt Makefile ../app_make.txt
 	$(EDIMG) imgin:../z_tools/fdimg0at.tek \
 		wbinimg src:$(HARIBOTEPATH)ipl10.bin len:512 from:0 to:0 \
 		copy from:$(HARIBOTEPATH)haribote.sys to:@: \
 		copy from:$(APP).hrb to:@: \
-		copy from:../nihongo/nihongo.fnt to:@: \
+		copy from:$(NIHONGOPATH)nihongo.fnt to:@: \
 		imgout:haribote.img
 
 # 一般規則
@@ -63,6 +64,7 @@ full:
 run_full:
 	$(MAKE) -C $(APILIBPATH)
 	$(MAKE) -C $(HARIBOTEPATH)
+	$(MAKE) -C $(NIHONGOPATH)
 	$(MAKE) run
 
 clean:

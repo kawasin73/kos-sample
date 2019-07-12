@@ -12,7 +12,7 @@ default:
 
 # ファイル生成規則
 
-haribote.img: haribote/ipl20.bin haribote/haribote.sys Makefile \
+haribote.img: haribote/ipl20.bin haribote/haribote.sys nihongo/nihongo.fnt Makefile \
 		a/a.hrb hello3/hello3.hrb hello4/hello4.hrb hello5/hello5.hrb \
 		winhelo/winhelo.hrb winhelo2/winhelo2.hrb winhelo3/winhelo3.hrb \
 		star1/star1.hrb stars/stars.hrb star2/star2.hrb \
@@ -62,6 +62,7 @@ run: haribote.img
 full:
 	$(MAKE) -C haribote
 	$(MAKE) -C apilib
+	$(MAKE) -C nihongo
 	$(MAKE) -C a
 	$(MAKE) -C hello3
 	$(MAKE) -C hello4
@@ -105,6 +106,7 @@ src_only:
 clean_full:
 	$(MAKE) -C haribote	clean
 	$(MAKE) -C apilib	clean
+	$(MAKE) -C nihongo	clean
 	$(MAKE) -C a		clean
 	$(MAKE) -C hello3	clean
 	$(MAKE) -C hello4	clean
@@ -132,6 +134,7 @@ clean_full:
 src_only_full:
 	$(MAKE) -C haribote	src_only
 	$(MAKE) -C apilib	src_only
+	$(MAKE) -C nihongo	src_only
 	$(MAKE) -C a		src_only
 	$(MAKE) -C hello3	src_only
 	$(MAKE) -C hello4	src_only
