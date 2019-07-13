@@ -21,7 +21,7 @@ haribote.img: haribote/ipl20.bin haribote/haribote.sys nihongo/nihongo.fnt Makef
 		sosu/sosu.hrb sosu2/sosu2.hrb sosu3/sosu3.hrb \
 		typeipl/typeipl.hrb type/type.hrb iroha/iroha.hrb chklang/chklang.hrb \
 		notrec/notrec.hrb bball/bball.hrb invader/invader.hrb calc/calc.hrb \
-		tview/tview.hrb
+		tview/tview.hrb gview/gview.hrb
 	$(EDIMG) imgin:./z_tools/fdimg0at.tek \
 		wbinimg src:haribote/ipl20.bin len:512 from:0 to:0 \
 		copy from:haribote/haribote.sys to:@: \
@@ -56,6 +56,10 @@ haribote.img: haribote/ipl20.bin haribote/haribote.sys nihongo/nihongo.fnt Makef
 		copy from:invader/invader.hrb to:@: \
 		copy from:calc/calc.hrb to:@: \
 		copy from:tview/tview.hrb to:@: \
+		copy from:gview/gview.hrb to:@: \
+		copy from:pictdata/fujisan.jpg to:@: \
+		copy from:pictdata/night.bmp to:@: \
+		copy from:pictdata/kawasin.jpg to:@: \
 		copy from:nihongo/nihongo.fnt to:@: \
 		imgout:haribote.img
 
@@ -98,6 +102,7 @@ full:
 	$(MAKE) -C invader
 	$(MAKE) -C calc
 	$(MAKE) -C tview
+	$(MAKE) -C gview
 	$(MAKE) haribote.img
 
 run_full:
@@ -147,6 +152,7 @@ clean_full:
 	$(MAKE) -C invader	clean
 	$(MAKE) -C calc		clean
 	$(MAKE) -C tview	clean
+	$(MAKE) -C gview	clean
 
 src_only_full:
 	$(MAKE) -C haribote	src_only
@@ -180,6 +186,7 @@ src_only_full:
 	$(MAKE) -C invader	src_only
 	$(MAKE) -C calc		src_only
 	$(MAKE) -C tview	src_only
+	$(MAKE) -C gview	src_only
 	-$(DEL) haribote.img
 
 refresh:
