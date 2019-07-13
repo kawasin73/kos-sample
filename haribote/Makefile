@@ -76,5 +76,5 @@ clean:
 
 src_only:
 	$(MAKE) clean
-	-$(DEL) ipl10.bin
+	-$(DEL) ipl20.bin
 	-$(DEL) haribote.sys
