@@ -15,6 +15,23 @@ install QEMU by Homebrew
 $ brew install qemu
 ```
 
+## How to Start ?
+
+```bash
+# ダウンロード
+$ git clone git@github.com:kawasin73/kos-sample.git
+$ cd kos-sample
+
+# コンパイル + 起動
+$ make run_full
+
+# 起動
+$ make run
+
+# ここのアプリケーションだけを起動する場合
+$ cd invader/ && make run_full
+```
+
 ## 参考
 
 - https://github.com/tatsumack/30nichideosjisaku
